@@ -1,11 +1,15 @@
-import  { Toaster } from "react-hot-toast";
-import { Route, Routes } from "react-router";
-import HomePage from "./pages/HomePage";
+import { Toaster } from "react-hot-toast";
+import { Navigate, Route, Routes } from "react-router";
+// import HomePage from "./pages/HomePage";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import DashboardPage from "./pages/DashboardPage.jsx";
+import SignInPage from "./pages/SignInPage.jsx";
+import SignUpPage from "./pages/SignUpPage.jsx";
 
 const App = () => {
   return (
     <>
-       <Toaster
+      <Toaster
         position="top-right"
         toastOptions={{
           duration: 3000,
@@ -15,8 +19,21 @@ const App = () => {
           success: { iconTheme: { primary: "#4F46E5", secondary: "#fff" } },
         }}
       />
-       <Routes>
-        <Route path="/" element={<HomePage />} />
+      <Routes>
+        {/* <Route path="/" element={<HomePage />} /> */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="/sign-in/*" element={<SignInPage />} />
+        <Route path="/sign-up/*" element={<SignUpPage />} />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );

@@ -1,12 +1,14 @@
 import express from "express";
 import cors from "cors";
-// import { clerkMiddleware } from "@clerk/express";
+import { clerkMiddleware } from "@clerk/express";
 import { ENV } from "./config/env.js";
 import morgan from "morgan";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 
 //Routes
+import userRoutes from "./routes/user.routes.js";
+
 
 const app = express();
 const PORT = ENV.PORT || 3000;
@@ -63,7 +65,7 @@ const globalLimiter = rateLimit({
 app.use("/api", globalLimiter);
 
 //Clerk middleware to handle authentication and user sessions
-// app.use(clerkMiddleware());
+app.use(clerkMiddleware());
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
@@ -79,6 +81,7 @@ app.get("/api/health", (req, res) => {
 // app.use(arcjetProtect);
 
 //Routes
+app.use("/api/users", userRoutes);
 
 // 404 handler for undefined routes
 app.use((req, res) => {
