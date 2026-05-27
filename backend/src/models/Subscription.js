@@ -90,16 +90,19 @@ subscriptionSchema.pre("save", function (next) {
   next();
 });
 
-subscriptionSchema.pre("findOneAndUpdate", function (next) {
+subscriptionSchema.pre("findOneAndUpdate", async function (next) {
   const update = this.getUpdate();
   if (update.startDate || update.billingCycle) {
-    const startDate = update.startDate || this._update.startDate;
-    const billingCycle = update.billingCycle || this._update.billingCycle;
-    if (startDate && billingCycle) {
-      this._update.nextRenewalDate = computeNextRenewalDate(
-        new Date(startDate),
-        billingCycle,
-      );
+    const existing = await this.model.findOne(this.getQuery());
+    if (existing) {
+      const startDate = update.startDate || existing.startDate;
+      const billingCycle = update.billingCycle || existing.billingCycle;
+      if (startDate && billingCycle) {
+        this.getUpdate().nextRenewalDate = computeNextRenewalDate(
+          new Date(startDate),
+          billingCycle,
+        );
+      }
     }
   }
   next();

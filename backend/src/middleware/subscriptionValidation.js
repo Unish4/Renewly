@@ -98,6 +98,6 @@ export const subscriptionUpdateRules = [
   body("description")
     .optional()
     .trim()
-    .isLength({ max: 500 })
-    .withMessage("Description cannot exceed 500 characters"),
+    .isLength({ max: 200 })
+    .withMessage("Description cannot exceed 200 characters"),
 ];

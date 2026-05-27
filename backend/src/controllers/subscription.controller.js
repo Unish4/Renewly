@@ -1,7 +1,7 @@
 import Subscription from "../models/subscription.model.js";
 import { getUserId } from "../middleware/auth.middleware.js";
 
-export const createSubscription = async (req, res) => {
+export const createSubscription = async (req, res, next) => {
   try {
     const userId = getUserId(req);
 
@@ -49,7 +49,7 @@ export const getSubscriptions = async (req, res, next) => {
 
     const {
       category,
-      status = "active",
+      status,
       sortBy = "createdAt",
       order = "desc",
       search,
@@ -131,7 +131,7 @@ export const updateSubscription = async (req, res, next) => {
     const updated = await Subscription.findOneAndUpdate(
       { _id: id, userId },
       updates,
-      { new: true },
+      { new: true, runValidators: true },
     );
 
     if (!updated) {
