@@ -8,7 +8,7 @@ import rateLimit from "express-rate-limit";
 
 //Routes
 import userRoutes from "./routes/user.routes.js";
-
+import subscriptionRoutes from "./routes/subscription.routes.js";
 
 const app = express();
 const PORT = ENV.PORT || 3000;
@@ -82,6 +82,7 @@ app.get("/api/health", (req, res) => {
 
 //Routes
 app.use("/api/users", userRoutes);
+app.use("/api/subscriptions", subscriptionRoutes);
 
 // 404 handler for undefined routes
 app.use((req, res) => {
