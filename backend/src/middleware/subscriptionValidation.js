@@ -1,20 +1,10 @@
 import { body } from "express-validator";
-
-const VALID_CATEGORIES = [
-  "Gym",
-  "Internet",
-  "AI Tools",
-  "Entertainment",
-  "Education",
-  "Mobile",
-  "Parking",
-  "Family",
-  "Other",
-];
-
-const VALID_BILLING_CYCLES = ["monthly", "yearly", "weekly", "quarterly"];
-const VALID_CURRENCIES = ["NPR", "USD"];
-const VALID_STATUSES = ["active", "paused", "cancelled"];
+import {
+  CATEGORIES,
+  BILLING_CYCLES,
+  CURRENCIES,
+  SUBSCRIPTION_STATUSES,
+} from "../config/constants.js";
 
 export const subscriptionCreateRules = [
   body("name")
@@ -27,21 +17,21 @@ export const subscriptionCreateRules = [
   body("category")
     .notEmpty()
     .withMessage("Category is required")
-    .isIn(VALID_CATEGORIES)
+    .isIn(CATEGORIES)
     .withMessage("Invalid category"),
 
   body("amount")
     .isFloat({ min: 0 })
     .withMessage("Amount must be a non-negative number"),
-    
-  body("currency")
-    .isIn(VALID_CURRENCIES)
-    .withMessage("Currency must be either 'NPR' or 'USD'"),
 
+  body("currency")
+    .isIn(CURRENCIES)
+    .withMessage("Currency must be one of: " + CURRENCIES.join(", ")),
+    
   body("billingCycle")
     .notEmpty()
     .withMessage("Billing cycle is required")
-    .isIn(VALID_BILLING_CYCLES)
+    .isIn(BILLING_CYCLES)
     .withMessage("Invalid billing cycle"),
 
   body("startDate").notEmpty().isISO8601().withMessage("Invalid start date"),
@@ -76,10 +66,7 @@ export const subscriptionUpdateRules = [
     .isLength({ max: 100 })
     .withMessage("Name cannot exceed 100 characters"),
 
-  body("category")
-    .optional()
-    .isIn(VALID_CATEGORIES)
-    .withMessage("Invalid category"),
+  body("category").optional().isIn(CATEGORIES).withMessage("Invalid category"),
 
   body("amount")
     .optional()
@@ -88,12 +75,12 @@ export const subscriptionUpdateRules = [
 
   body("currency")
     .optional()
-    .isIn(VALID_CURRENCIES)
-    .withMessage("Currency must be NPR or USD"),
+    .isIn(CURRENCIES)
+    .withMessage("Currency must be one of: " + CURRENCIES.join(", ")),
 
   body("billingCycle")
     .optional()
-    .isIn(VALID_BILLING_CYCLES)
+    .isIn(BILLING_CYCLES)
     .withMessage("Invalid billing cycle"),
 
   body("startDate")
@@ -101,7 +88,10 @@ export const subscriptionUpdateRules = [
     .isISO8601()
     .withMessage("Start date must be a valid date"),
 
-  body("status").optional().isIn(VALID_STATUSES).withMessage("Invalid status"),
+  body("status")
+    .optional()
+    .isIn(SUBSCRIPTION_STATUSES)
+    .withMessage("Invalid status"),
 
   body("description")
     .optional()

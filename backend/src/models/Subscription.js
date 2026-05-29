@@ -1,4 +1,10 @@
 import mongoose from "mongoose";
+import {
+  CATEGORIES,
+  BILLING_CYCLES,
+  CURRENCIES,
+  SUBSCRIPTION_STATUSES,
+} from "../config/constants.js";
 
 const subscriptionSchema = new mongoose.Schema(
   {
@@ -17,18 +23,8 @@ const subscriptionSchema = new mongoose.Schema(
       type: String,
       required: [true, "Category is required"],
       enum: {
-        values: [
-          "Gym",
-          "Internet",
-          "AI Tools",
-          "Entertainment",
-          "Education",
-          "Mobile",
-          "Parking",
-          "Family",
-          "Other",
-        ],
-        message: "{VALUE} is not a valid category",
+        values: CATEGORIES,
+        message: "Category must be one of: " + CATEGORIES.join(", "),
       },
     },
     amount: {
@@ -39,13 +35,14 @@ const subscriptionSchema = new mongoose.Schema(
     currency: {
       type: String,
       required: [true, "Currency is required"],
-      enum: ["NPR", "USD"],
+      enum: CURRENCIES,
       default: "NPR",
     },
     billingCycle: {
       type: String,
       required: [true, "Billing cycle is required"],
-      enum: ["monthly", "weekly", "yearly", "quarterly"],
+      enum: BILLING_CYCLES,
+      default: "monthly",
     },
     startDate: {
       type: Date,
@@ -60,7 +57,7 @@ const subscriptionSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["active", "cancelled", "paused"],
+      enum: SUBSCRIPTION_STATUSES,
       default: "active",
     },
     logoUrl: {

@@ -1,7 +1,6 @@
 import api from "./api.js";
 
 export const subscriptionService = {
-  // Accepts a params object for filtering: { category, status, search, sortBy, order }
   getAll: async (params = {}) => {
     const response = await api.get("/subscriptions", { params });
     return response.data;
@@ -9,6 +8,11 @@ export const subscriptionService = {
 
   getById: async (id) => {
     const response = await api.get(`/subscriptions/${id}`);
+    return response.data;
+  },
+
+  getSummary: async () => {
+    const response = await api.get("/subscriptions/summary");
     return response.data;
   },
 

@@ -11,11 +11,13 @@ import {
   getSubscriptionById,
   updateSubscription,
   deleteSubscription,
+  getSubscriptionSummary,
 } from "../controllers/subscription.controller.js";
 
 const router = Router();
 
 router.get("/", requireAuth, getSubscriptions);
+router.get("/summary", requireAuth, getSubscriptionSummary);
 router.get("/:id", requireAuth, getSubscriptionById);
 router.post(
   "/",

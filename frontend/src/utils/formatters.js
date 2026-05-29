@@ -1,4 +1,6 @@
 export const formatCurrency = (amount, currency = "NPR") => {
+  if (typeof amount !== "number" || isNaN(amount)) return "—";
+
   if (currency === "NPR") {
     const formatted = new Intl.NumberFormat("ne-NP", {
       minimumFractionDigits: 0,
@@ -17,15 +19,13 @@ export const formatCurrency = (amount, currency = "NPR") => {
 };
 
 // Converts any subscription amount to a monthly equivalent.
-// Used in analytics to compare subscriptions with different billing cycles.
 export const toMonthlyAmount = (amount, billingCycle) => {
-  switch (billingCycle) {
-    case "weekly":     return amount * 4.33; // avg weeks per month
-    case "monthly":    return amount;
-    case "quarterly":  return amount / 3;
-    case "yearly":     return amount / 12;
-    default:           return amount;
-  }
+  const multipliers = {
+    weekly: 52 / 12, // 52 weeks per year / 12 months ≈ 4.333    monthly: 1,
+    quarterly: 1 / 3,
+    yearly: 1 / 12,
+  };
+  return amount * (multipliers[billingCycle] || 1);
 };
 
 // Formats a date for display. Returns "Jun 15, 2025" style.
@@ -47,4 +47,14 @@ export const daysUntil = (date) => {
   target.setHours(0, 0, 0, 0);
   const diffMs = target - today;
   return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+};
+
+export const formatCycleLabel = (amount, currency, billingCycle) => {
+  const labels = {
+    weekly: "/ wk",
+    monthly: "/ mo",
+    quarterly: "/ qtr",
+    yearly: "/ yr",
+  };
+  return `${formatCurrency(amount, currency)} ${labels[billingCycle] || ""}`;
 };
