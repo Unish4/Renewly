@@ -68,6 +68,7 @@ export const useSubscriptionStore = create((set, get) => ({
         ),
       }));
       toast.success(`${data.data.name} updated`);
+      return { success: true };
     } catch (error) {
       const fieldErrors = error.response?.data?.errors;
       if (!fieldErrors) {
@@ -80,13 +81,14 @@ export const useSubscriptionStore = create((set, get) => ({
       set({ isSubmitting: false });
     }
   },
-
   deleteSubscription: async (id) => {
     try {
       await subscriptionService.delete(id);
       set((state) => ({
         subscriptions: state.subscriptions.filter((sub) => sub._id !== id),
       }));
+      toast.success("Subscription deleted");
+      return { success: true };
     } catch (error) {
       toast.error(
         error.response?.data?.message || "Failed to delete subscription",

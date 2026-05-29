@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Plus, Search, SlidersHorizontal } from "lucide-react";
 import { useSubscriptionStore } from "../stores/subscriptionStore.js";
 import SubscriptionCard from "../components/SubscriptionCard.jsx";
@@ -12,10 +12,19 @@ export default function SubscriptionsPage() {
 
   const [showForm, setShowForm] = useState(false);
   const [editingSubscription, setEditingSubscription] = useState(null);
+  const closeFormTimeoutRef = useRef(null);
 
   useEffect(() => {
     fetchSubscriptions();
   }, [fetchSubscriptions]);
+
+  useEffect(() => {
+    return () => {
+      if (closeFormTimeoutRef.current) {
+        clearTimeout(closeFormTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleEdit = (subscription) => {
     setEditingSubscription(subscription);
@@ -24,7 +33,10 @@ export default function SubscriptionsPage() {
 
   const handleCloseForm = () => {
     setShowForm(false);
-    setTimeout(() => setEditingSubscription(null), 200);
+    if (closeFormTimeoutRef.current) {
+      clearTimeout(closeFormTimeoutRef.current);
+    }
+    closeFormTimeoutRef.current = setTimeout(() => setEditingSubscription(null), 200);
   };
 
   return (

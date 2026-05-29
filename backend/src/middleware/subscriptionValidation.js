@@ -32,8 +32,8 @@ export const subscriptionCreateRules = [
 
   body("amount")
     .isFloat({ min: 0 })
-    .withMessage("Amount must be a positive number"),
-
+    .withMessage("Amount must be a non-negative number"),
+    
   body("currency")
     .isIn(VALID_CURRENCIES)
     .withMessage("Currency must be either 'NPR' or 'USD'"),

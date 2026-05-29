@@ -28,7 +28,7 @@ export default function SubscriptionCard({ subscription, onEdit }) {
     if (showMenu) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-    
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -36,15 +36,20 @@ export default function SubscriptionCard({ subscription, onEdit }) {
 
   const handleDelete = async () => {
     setIsDeleting(true);
-    await deleteSubscription(subscription._id);
+    const result = await deleteSubscription(subscription._id);
     setIsDeleting(false);
-    setShowDeleteConfirm(false);
+    if (result?.success !== false) {
+      setShowDeleteConfirm(false);
+    }
   };
-
   const togglePause = async () => {
     const newStatus = subscription.status === "active" ? "paused" : "active";
-    await updateSubscription(subscription._id, { status: newStatus });
-    setShowMenu(false);
+    const result = await updateSubscription(subscription._id, {
+      status: newStatus,
+    });
+    if (result?.success !== false) {
+      setShowMenu(false);
+    }
   };
 
   const isPaused = subscription.status === "paused";
@@ -134,7 +139,11 @@ export default function SubscriptionCard({ subscription, onEdit }) {
                     }}
                     className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors group"
                   >
-                    <Trash2 size={16} className="text-red-400 group-hover:text-red-600 transition-colors" /> Delete
+                    <Trash2
+                      size={16}
+                      className="text-red-400 group-hover:text-red-600 transition-colors"
+                    />{" "}
+                    Delete
                   </button>
                 </div>
               )}
