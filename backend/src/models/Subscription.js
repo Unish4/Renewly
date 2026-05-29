@@ -76,21 +76,24 @@ const subscriptionSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    website: {
+      type: String,
+      trim: true,
+    },
   },
   { timestamps: true },
 );
 
-subscriptionSchema.pre("save", function (next) {
+subscriptionSchema.pre("save", async function () {
   if (this.isModified("startDate") || this.isModified("billingCycle")) {
     this.nextRenewalDate = computeNextRenewalDate(
       this.startDate,
       this.billingCycle,
     );
   }
-  next();
 });
 
-subscriptionSchema.pre("findOneAndUpdate", async function (next) {
+subscriptionSchema.pre("findOneAndUpdate", async function () {
   const update = this.getUpdate();
   if (update.startDate || update.billingCycle) {
     const existing = await this.model.findOne(this.getQuery());
@@ -105,7 +108,6 @@ subscriptionSchema.pre("findOneAndUpdate", async function (next) {
       }
     }
   }
-  next();
 });
 
 export function computeNextRenewalDate(startDate, billingCycle) {

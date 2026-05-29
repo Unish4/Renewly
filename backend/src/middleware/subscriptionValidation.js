@@ -31,11 +31,9 @@ export const subscriptionCreateRules = [
     .withMessage("Invalid category"),
 
   body("amount")
-    .isNumeric()
-    .withMessage("Amount must be a number")
     .isFloat({ min: 0 })
-    .withMessage("Amount cannot be negative"),
-
+    .withMessage("Amount must be a non-negative number"),
+    
   body("currency")
     .isIn(VALID_CURRENCIES)
     .withMessage("Currency must be either 'NPR' or 'USD'"),
@@ -53,10 +51,20 @@ export const subscriptionCreateRules = [
     .isLength({ max: 200 })
     .withMessage("Description cannot exceed 200 characters"),
 
+  body("website")
+    .optional()
+    .isLength({ max: 500 })
+    .withMessage("Website cannot exceed 500 characters"),
+
   body("sharedWith")
     .optional()
-    .isArray()
-    .withMessage("Shared with must be an array"),
+    .isInt({ min: 1 })
+    .withMessage("Shared with must be at least 1"),
+
+  body("reminderEnabled")
+    .optional()
+    .isBoolean()
+    .withMessage("Reminder enabled must be a boolean"),
 ];
 
 export const subscriptionUpdateRules = [
@@ -100,4 +108,15 @@ export const subscriptionUpdateRules = [
     .trim()
     .isLength({ max: 200 })
     .withMessage("Description cannot exceed 200 characters"),
+
+  body("website")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("Website cannot exceed 500 characters"),
+
+  body("reminderEnabled")
+    .optional()
+    .isBoolean()
+    .withMessage("Reminder enabled must be a boolean"),
 ];

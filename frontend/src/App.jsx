@@ -5,6 +5,7 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import SignInPage from "./pages/SignInPage.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
+import SubscriptionsPage from "./pages/SubscriptionsPage.jsx";
 
 const App = () => {
   return (
@@ -26,6 +27,15 @@ const App = () => {
           element={
             <ProtectedRoute>
               <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/subscriptions"
+          element={
+            <ProtectedRoute>
+              <SubscriptionsPage />
             </ProtectedRoute>
           }
         />
