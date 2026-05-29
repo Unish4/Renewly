@@ -1,4 +1,4 @@
-import Subscription from "../models/subscription.model.js";
+import Subscription from "../models/Subscription.js"
 import { getUserId } from "../middleware/auth.middleware.js";
 
 export const createSubscription = async (req, res, next) => {
@@ -17,6 +17,20 @@ export const createSubscription = async (req, res, next) => {
       sharedWith,
       reminderEnabled,
     } = req.body;
+
+    console.log("Creating subscription with data:", {
+      userId,
+      name,
+      category,
+      amount,
+      currency,
+      billingCycle,
+      startDate,
+      description,
+      website,
+      sharedWith,
+      reminderEnabled,
+    });
 
     const subscription = new Subscription({
       userId,
@@ -39,8 +53,10 @@ export const createSubscription = async (req, res, next) => {
       message: "Subscription created successfully",
       data: saved,
     });
-  } catch (error) {}
-  next(error);
+  } catch (error) {
+    console.error("Error creating subscription:", error);
+    next(error);
+  }
 };
 
 export const getSubscriptions = async (req, res, next) => {
