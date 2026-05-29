@@ -26,8 +26,8 @@ export const subscriptionCreateRules = [
 
   body("currency")
     .isIn(CURRENCIES)
-    .withMessage("Currency must be either 'NPR' or 'USD'"),
-
+    .withMessage("Currency must be one of: " + CURRENCIES.join(", ")),
+    
   body("billingCycle")
     .notEmpty()
     .withMessage("Billing cycle is required")

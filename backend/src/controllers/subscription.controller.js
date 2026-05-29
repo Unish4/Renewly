@@ -225,16 +225,17 @@ export const getSubscriptionSummary = async (req, res, next) => {
 
       // Add to category breakdown
       if (!byCategory[sub.category]) {
-        byCategory[sub.category] = {
+        byCategory[sub.category] = {};
+      }
+      if (!byCategory[sub.category][sub.currency]) {
+        byCategory[sub.category][sub.currency] = {
           monthly: 0,
           count: 0,
-          currency: sub.currency,
         };
       }
-      byCategory[sub.category].monthly += monthlyAmount;
-      byCategory[sub.category].count += 1;
+      byCategory[sub.category][sub.currency].monthly += monthlyAmount;
+      byCategory[sub.category][sub.currency].count += 1;
     });
-
     summary.NPR.monthly = Math.round(summary.NPR.monthly * 100) / 100;
     summary.NPR.yearly = Math.round(summary.NPR.yearly * 100) / 100;
     summary.USD.monthly = Math.round(summary.USD.monthly * 100) / 100;

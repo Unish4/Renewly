@@ -21,8 +21,7 @@ export const formatCurrency = (amount, currency = "NPR") => {
 // Converts any subscription amount to a monthly equivalent.
 export const toMonthlyAmount = (amount, billingCycle) => {
   const multipliers = {
-    weekly: 4.33, // 365 / 12 / 7 — average weeks per month
-    monthly: 1,
+    weekly: 52 / 12, // 52 weeks per year / 12 months ≈ 4.333    monthly: 1,
     quarterly: 1 / 3,
     yearly: 1 / 12,
   };
