@@ -1,4 +1,4 @@
-import Subscription from "../models/Subscription.js"
+import Subscription from "../models/Subscription.js";
 import { getUserId } from "../middleware/auth.middleware.js";
 
 export const createSubscription = async (req, res, next) => {
@@ -184,6 +184,69 @@ export const deleteSubscription = async (req, res, next) => {
       success: true,
       message: "Subscription deleted successfully",
       data: deleted,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getSubscriptionSummary = async (req, res, next) => {
+  try {
+    const userId = getUserId(req);
+
+    const subscriptions = await Subscription.find({
+      userId,
+      status: "active",
+    });
+
+    const toMonthly = {
+      weekly: 4.33,
+      monthly: 1,
+      quarterly: 1 / 3,
+      yearly: 1 / 12,
+    };
+
+    const summary = {
+      NPR: { monthly: 0, yearly: 0, count: 0 },
+      USD: { monthly: 0, yearly: 0, count: 0 },
+    };
+
+    const byCategory = {};
+
+    subscriptions.forEach((sub) => {
+      const multiplier = toMonthly[sub.billingCycle] || 1;
+      const monthlyAmount = sub.amount * multiplier;
+
+      if (summary[sub.currency]) {
+        summary[sub.currency].monthly += monthlyAmount;
+        summary[sub.currency].yearly += monthlyAmount * 12;
+        summary[sub.currency].count += 1;
+      }
+
+      // Add to category breakdown
+      if (!byCategory[sub.category]) {
+        byCategory[sub.category] = {
+          monthly: 0,
+          count: 0,
+          currency: sub.currency,
+        };
+      }
+      byCategory[sub.category].monthly += monthlyAmount;
+      byCategory[sub.category].count += 1;
+    });
+
+    summary.NPR.monthly = Math.round(summary.NPR.monthly * 100) / 100;
+    summary.NPR.yearly = Math.round(summary.NPR.yearly * 100) / 100;
+    summary.USD.monthly = Math.round(summary.USD.monthly * 100) / 100;
+    summary.USD.yearly = Math.round(summary.USD.yearly * 100) / 100;
+
+    res.status(200).json({
+      success: true,
+      data: {
+        summary,
+        byCategory,
+        totalActiveSubscriptions: subscriptions.length,
+      },
     });
   } catch (error) {
     next(error);

@@ -7,7 +7,7 @@ import {
   PlayCircle,
 } from "lucide-react";
 import CategoryBadge from "./CategoryBadge.jsx";
-import { formatCurrency, formatDate } from "../utils/formatters.js";
+import {  formatDate, formatCycleLabel } from "../utils/formatters.js";
 import { useSubscriptionStore } from "../stores/subscriptionStore.js";
 import ConfirmDialog from "./ConfirmDialog.jsx";
 
@@ -155,7 +155,7 @@ export default function SubscriptionCard({ subscription, onEdit }) {
             <div>
               <div className="flex items-baseline gap-1">
                 <p className="text-2xl font-black text-gray-900 tracking-tight">
-                  {formatCurrency(subscription.amount, subscription.currency)}
+                  {formatCycleLabel(subscription.amount, subscription.currency, subscription.billingCycle)}
                 </p>
               </div>
               <p className="text-xs text-gray-500 capitalize block mt-0.5 font-medium tracking-wide">
