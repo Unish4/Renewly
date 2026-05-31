@@ -63,8 +63,12 @@ export default function SubscriptionsPage() {
   const hasActiveFilters = filters.category || filters.search;
 
   return (
-    <div className="min-h-screen bg-slate-50/50">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <div className="min-h-screen bg-linear-to-br from-indigo-50 via-white to-blue-50 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute top-0 -left-4 w-64 h-64 md:w-96 md:h-96 bg-purple-300/30 rounded-full mix-blend-multiply filter blur-3xl opacity-60"></div>
+      <div className="absolute top-0 -right-4 w-64 h-64 md:w-96 md:h-96 bg-yellow-300/30 rounded-full mix-blend-multiply filter blur-3xl opacity-60"></div>
+      
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Page header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 sm:mb-10">
         <div>
@@ -95,7 +99,7 @@ export default function SubscriptionsPage() {
       <SpendingSummaryBar />
 
       {/* Search + filter bar */}
-      <div className="flex w-1/2 flex-col sm:flex-row gap-3 mb-8">
+      <div className="flex w-full sm:w-1/2 lg:w-1/3 flex-col sm:flex-row gap-3 mb-8">
         <div className="flex-1 relative group">
           <Search
             size={16}
@@ -116,13 +120,13 @@ export default function SubscriptionsPage() {
 
       {/* Subscription grid */}
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
           {Array.from({ length: 8 }).map((_, i) => (
             <SkeletonCard key={i} />
           ))}
         </div>
       ) : subscriptions.length === 0 ? (
-        <div className="flex flex-col items-center justify-center text-center py-24 sm:py-32 px-4 rounded-3xl bg-gray-50/50 border border-gray-100 border-dashed mt-8">
+        <div className="flex flex-col items-center justify-center text-center py-24 sm:py-32 px-4 rounded-3xl bg-white/50 backdrop-blur-sm border border-white/60 shadow-sm mt-8">
           <div className="w-16 h-16 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center text-3xl mb-5 transform -rotate-6">
             <div className="text-4xl mb-3">
               {hasActiveFilters ? "🔍" : "📋"}
@@ -142,21 +146,21 @@ export default function SubscriptionsPage() {
                 setSearchInput("");
                 resetFilters();
               }}
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-blue-600 hover:underline font-medium"
             >
               Clear filters
             </button>
           ) : (
             <button
               onClick={() => setShowForm(true)}
-              className="inline-flex items-center gap-2 bg-gray-900 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-800 transition-colors"
+              className="inline-flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-indigo-600 hover:shadow-lg transition-all duration-300"
             >
               <Plus size={16} /> Add your first subscription
             </button>
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
           {subscriptions.map((sub) => (
             <SubscriptionCard
               key={sub._id}

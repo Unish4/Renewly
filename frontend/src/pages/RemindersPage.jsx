@@ -55,17 +55,17 @@ function SectionHeader({ icon: Icon, title, count, colorClass, description }) {
 }
 
 // ── Single reminder row
-function ReminderRow({ subscription }) {
+function ReminderRow({ subscription, urgencyColorClass }) {
   const isMuted = !(subscription.reminderEnabled ?? true);
 
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl p-4 sm:p-5 hover:border-gray-200 hover:shadow-sm transition-all duration-150">
+    <div className={`bg-white/80 backdrop-blur-sm border-l-4 ${urgencyColorClass} border-t border-r border-b border-gray-100 rounded-2xl p-4 sm:p-5 hover:border-gray-200 hover:shadow-md transition-all duration-300`}>
       <div className="flex items-start gap-3">
         {/* ── Left ── */}
         <div className="flex-1 min-w-0">
           {/* Name + badges */}
-          <div className="flex items-center gap-2 flex-wrap mb-2">
-            <p className="text-sm font-bold text-gray-900 truncate max-w-50 sm:max-w-none">
+          <div className="flex items-center gap-2 flex-wrap mb-2.5">
+            <p className="text-sm sm:text-base font-bold text-slate-900 truncate">
               {subscription.name}
             </p>
             <RenewalBadge
@@ -134,19 +134,24 @@ export default function RemindersPage() {
   const hasContent = overdue.length > 0 || upcoming.length > 0;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6 sm:py-8">
+    <div className="min-h-screen bg-linear-to-br from-indigo-50 via-white to-blue-50 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute top-0 -left-4 w-64 h-64 md:w-96 md:h-96 bg-purple-300/30 rounded-full mix-blend-multiply filter blur-3xl opacity-60"></div>
+      <div className="absolute top-0 -right-4 w-64 h-64 md:w-96 md:h-96 bg-yellow-300/30 rounded-full mix-blend-multiply filter blur-3xl opacity-60"></div>
+      
+      <div className="relative z-10 max-w-5xl mx-auto px-4 py-6 sm:py-10">
       {/* ── Page header ── */}
-      <div className="flex items-start justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-gray-900 rounded-xl shrink-0">
-            <Bell size={18} className="text-white" />
+      <div className="flex items-start justify-between mb-8 bg-white/70 backdrop-blur-xl p-5 sm:p-6 rounded-3xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-linear-to-br from-blue-500 to-blue-600 rounded-2xl shrink-0 shadow-sm shadow-blue-200">
+            <Bell size={24} className="text-white" strokeWidth={2.5} />
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-slate-900 to-slate-700 tracking-tight">
               Reminders
             </h1>
-            <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
-              Renewals + email schedule
+            <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1">
+              Upcoming renewals & schedules
             </p>
           </div>
         </div>
@@ -165,18 +170,20 @@ export default function RemindersPage() {
       </div>
 
       {/* ── Email system info card ── */}
-      <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 mb-6">
-        <div className="flex items-start gap-3">
-          <Info size={15} className="text-blue-600 mt-0.5 shrink-0" />
+      <div className="bg-white/70 backdrop-blur-xl border border-blue-100 rounded-3xl p-5 sm:p-6 mb-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+        <div className="flex items-start gap-4">
+          <div className="p-2 bg-blue-50 rounded-xl">
+            <Info size={20} className="text-blue-600 shrink-0" strokeWidth={2.5} />
+          </div>
           <div>
-            <p className="text-sm font-semibold text-blue-900 mb-1">
+            <p className="text-base font-bold text-slate-900 mb-1.5">
               How email reminders work
             </p>
-            <p className="text-sm text-blue-700 leading-relaxed">
+            <p className="text-sm font-medium text-slate-600 leading-relaxed">
               Renewly sends you a digest email automatically at{" "}
-              <strong>8:00 AM Nepal time</strong> — 7 days before renewal, again
-              at 3 days, and on the due date itself. Mute individual
-              subscriptions from the subscription card if needed.
+              <strong className="text-slate-800">8:00 AM Nepal time</strong> — 7 days before renewal, again
+              at 3 days, and on the due date itself. You can mute individual
+              subscriptions directly from the subscription card.
             </p>
           </div>
         </div>
@@ -211,9 +218,9 @@ export default function RemindersPage() {
                 colorClass="border-red-200 text-red-700"
                 description="Past their renewal date. Edit the subscription's start date to recompute the next renewal."
               />
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 {overdue.map((s) => (
-                  <ReminderRow key={s._id} subscription={s} />
+                  <ReminderRow key={s._id} subscription={s} urgencyColorClass="border-l-red-500" />
                 ))}
               </div>
             </section>
@@ -228,9 +235,9 @@ export default function RemindersPage() {
                 colorClass="border-red-200 text-red-700"
                 description="Reminder emails are sending today at 8am NPT."
               />
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 {dueToday.map((s) => (
-                  <ReminderRow key={s._id} subscription={s} />
+                  <ReminderRow key={s._id} subscription={s} urgencyColorClass="border-l-rose-500" />
                 ))}
               </div>
             </section>
@@ -245,9 +252,9 @@ export default function RemindersPage() {
                 colorClass="border-orange-200 text-orange-700"
                 description="Renewals in 1–7 days. Emails fire at the 7-day and 3-day marks."
               />
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 {thisWeek.map((s) => (
-                  <ReminderRow key={s._id} subscription={s} />
+                  <ReminderRow key={s._id} subscription={s} urgencyColorClass="border-l-orange-400" />
                 ))}
               </div>
             </section>
@@ -262,15 +269,16 @@ export default function RemindersPage() {
                 colorClass="border-gray-200 text-gray-600"
                 description="Renewals 8–30 days away. First email fires 7 days before each one."
               />
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 {laterList.map((s) => (
-                  <ReminderRow key={s._id} subscription={s} />
+                  <ReminderRow key={s._id} subscription={s} urgencyColorClass="border-l-blue-400" />
                 ))}
               </div>
             </section>
           )}
         </div>
       )}
+      </div>
     </div>
   );
 }
