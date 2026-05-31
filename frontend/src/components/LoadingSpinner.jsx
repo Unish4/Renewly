@@ -10,13 +10,12 @@ function LoadingSpinner({ size = "md", fullScreen = false }) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-900">
         <Loader className={`${sizes[size]} animate-spin text-white`} />
-      </div>
-    );
+      </div>    );
   }
 
   return (
     <div className="flex items-center justify-center p-8">
-      <Loader className={`${sizes[size]} animate-spin text-white`} />
+      <Loader className={`${sizes[size]} animate-spin text-black`} />
     </div>
   );
 }
