@@ -5,10 +5,13 @@ import { ENV } from "./config/env.js";
 import morgan from "morgan";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
+import { scheduleReminderJob } from "./jobs/reminderJob.js";
+
 
 //Routes
 import userRoutes from "./routes/user.routes.js";
 import subscriptionRoutes from "./routes/subscription.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 
 const app = express();
 const PORT = ENV.PORT || 3000;
@@ -83,6 +86,8 @@ app.get("/api/health", (req, res) => {
 //Routes
 app.use("/api/users", userRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
+app.use("/api/admin", adminRoutes);
+
 
 // 404 handler for undefined routes
 app.use((req, res) => {
@@ -101,6 +106,7 @@ const startServer = async () => {
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
+  scheduleReminderJob(); // Start the reminder job scheduler
 };
 
 startServer();

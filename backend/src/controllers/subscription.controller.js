@@ -95,6 +95,69 @@ export const getSubscriptions = async (req, res, next) => {
   }
 };
 
+export const getUpcomingSubscriptions = async (req, res, next) => {
+  try {
+    const userId = getUserId(req);
+    const { days = 30 } = req.query;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const targetDate = new Date(today);
+    targetDate.setDate(targetDate.getDate() + parseInt(days));
+    targetDate.setHours(23, 59, 59, 999);
+
+    const subscriptions = await Subscription.find({
+      userId,
+      status: "active",
+      nextRenewalDate: { $gte: today, $lte: targetDate },
+    }).sort({ nextRenewalDate: 1 }).lean();
+
+    // Add daysUntil dynamically
+    const enriched = subscriptions.map((sub) => ({
+      ...sub,
+      daysUntil: Math.ceil((new Date(sub.nextRenewalDate) - today) / (1000 * 60 * 60 * 24)),
+    }));
+
+    res.status(200).json({
+      success: true,
+      count: enriched.length,
+      data: enriched,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getOverdueSubscriptions = async (req, res, next) => {
+  try {
+    const userId = getUserId(req);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const subscriptions = await Subscription.find({
+      userId,
+      status: "active",
+      nextRenewalDate: { $lt: today },
+    }).sort({ nextRenewalDate: 1 }).lean();
+
+    // Add negative daysUntil dynamically
+    const enriched = subscriptions.map((sub) => ({
+      ...sub,
+      daysUntil: Math.ceil((new Date(sub.nextRenewalDate) - today) / (1000 * 60 * 60 * 24)),
+    }));
+
+    res.status(200).json({
+      success: true,
+      count: enriched.length,
+      data: enriched,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getSubscriptionById = async (req, res, next) => {
   try {
     const userId = getUserId(req);

@@ -1,11 +1,12 @@
 import { Toaster } from "react-hot-toast";
 import { Navigate, Route, Routes } from "react-router";
-// import HomePage from "./pages/HomePage";
+import HomePage from "./pages/HomePage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import SignInPage from "./pages/SignInPage.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
 import SubscriptionsPage from "./pages/SubscriptionsPage.jsx";
+import RemindersPage from "./pages/RemindersPage.jsx";
 
 const App = () => {
   return (
@@ -21,9 +22,10 @@ const App = () => {
         }}
       />
       <Routes>
-        {/* <Route path="/" element={<HomePage />} /> */}
+        <Route path="/" element={<HomePage />} />
+
         <Route
-          path="/"
+          path="/dashboard"
           element={
             <ProtectedRoute>
               <DashboardPage />
@@ -36,6 +38,15 @@ const App = () => {
           element={
             <ProtectedRoute>
               <SubscriptionsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/reminders"
+          element={
+            <ProtectedRoute>
+              <RemindersPage />
             </ProtectedRoute>
           }
         />

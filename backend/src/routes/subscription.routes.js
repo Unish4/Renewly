@@ -12,10 +12,14 @@ import {
   updateSubscription,
   deleteSubscription,
   getSubscriptionSummary,
+  getUpcomingSubscriptions,
+  getOverdueSubscriptions,
 } from "../controllers/subscription.controller.js";
 
 const router = Router();
 
+router.get("/upcoming", requireAuth, getUpcomingSubscriptions);
+router.get("/overdue", requireAuth, getOverdueSubscriptions);
 router.get("/", requireAuth, getSubscriptions);
 router.get("/summary", requireAuth, getSubscriptionSummary);
 router.get("/:id", requireAuth, getSubscriptionById);
