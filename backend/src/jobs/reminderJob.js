@@ -45,13 +45,12 @@ export const runReminderJob = async () => {
       if (!byUser[sub.userId]) byUser[sub.userId] = [];
 
       // Attach daysUntil so the email template can render urgency badges.
-      sub.daysUntil = Math.round(
+      sub.daysUntil = Math.ceil(
         (new Date(sub.nextRenewalDate) - today) / msPerDay,
       );
 
       byUser[sub.userId].push(sub);
     });
-
     const userCount = Object.keys(byUser).length;
     console.log(
       `[Reminders] Processing ${userCount} user${userCount !== 1 ? "s" : ""}, ` +

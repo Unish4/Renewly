@@ -75,9 +75,13 @@ function ReminderRow({ subscription }) {
             />
             {isMuted && (
               <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full font-medium">
-                <BellOff size={12} className="shrink-0" />
+                <BellOff
+                  size={12}
+                  className="shrink-0"
+                  aria-label="Email reminders muted"
+                />
               </span>
-            )}
+            )}{" "}
           </div>
 
           {/* Category */}

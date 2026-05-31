@@ -1,1 +1,1 @@
-Add //   appUrl      — the deployed frontend URL for the CTA button from emailTemplates.js
+This is the readme

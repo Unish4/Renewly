@@ -215,7 +215,7 @@ export const buildReminderEmail = ({ userName, subscriptions, appUrl }) => {
                 <tr>
                   <td style="padding: 28px 28px 20px;">
                     <p style="margin: 0 0 8px; font-size: 24px; font-weight: 700; color: #111827; line-height: 1.2;">
-                      Hi ${userName} 👋
+                      Hi ${escapeHtml(userName)} 👋
                     </p>
                     <p style="margin: 0; font-size: 15px; color: #6b7280; line-height: 1.6;">
                       ${introParagraph}
